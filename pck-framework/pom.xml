@@ -83,7 +83,11 @@
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger-ui</artifactId>
         </dependency>
-
+        <!--    SpringBoot项目结合jwt进行登录时出现的问题，因为jdk版本太高导致的(只支持JDK8)    -->
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
