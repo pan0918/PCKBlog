@@ -23,7 +23,7 @@ public class AccessDeniedHandlerImpl implements AccessDeniedHandler {
         // 打印异常信息
         accessDeniedException.printStackTrace();
 
-        ResponseResult result = ResponseResult.errorResult(AppHttpCodeEnum.NO_OPERATOR_AUTH);
+        ResponseResult result = ResponseResult.errorResult(AppHttpCodeEnum.LOGIN_ERROR);
         // 响应给前端
         WebUtils.renderString(response, JSON.toJSONString(result));
     }
