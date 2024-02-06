@@ -40,7 +40,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         // 按点击量从上到下排序
         queryWrapper.orderByDesc(Article::getViewCount);
         // 最多显示10条内容
-        Page<Article> page = new Page<>(SystemConstants.ARTICLE_STATUS_DRAFT,SystemConstants.ARTICLE_STATUS_SIZE );
+        Page<Article> page = new Page<>(SystemConstants.ARTICLE_STATUS_CURRENT,SystemConstants.ARTICLE_STATUS_SIZE );
         page(page, queryWrapper);
 
         List<Article> articles = page.getRecords();
