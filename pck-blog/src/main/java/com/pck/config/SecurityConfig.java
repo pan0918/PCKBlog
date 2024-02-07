@@ -47,6 +47,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/login").anonymous()
                 .antMatchers("/logout").authenticated() // 退出登陆需要携带token才行，即需要在登陆情况下才能操作
                 .antMatchers("/user/userInfo").authenticated()
+                .antMatchers("/comment").authenticated()
+//                .antMatchers("/upload").authenticated()
                 // 除上面外的所有请求全部不需要认证即可访问
                 .anyRequest().permitAll();
 
