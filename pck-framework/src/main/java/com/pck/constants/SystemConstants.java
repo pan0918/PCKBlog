@@ -22,4 +22,8 @@ public class SystemConstants {
     // 根评论状态
     public static final int ROOT_STATUS_NORMAL = -1;
 
+    // 评论类型
+    public static final String ARTICLE_COMMENT = "0";
+    public static final String LINK_COMMENT = "1";
+
 }

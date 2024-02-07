@@ -8,12 +8,15 @@ import com.pck.domain.ResponseResult;
 import com.pck.domain.entity.Comment;
 import com.pck.domain.vo.CommentVo;
 import com.pck.domain.vo.PageVo;
+import com.pck.enums.AppHttpCodeEnum;
+import com.pck.exception.SystemException;
 import com.pck.mapper.CommentMapper;
 import com.pck.service.CommentService;
 import com.pck.service.UserService;
 import com.pck.utils.BeanCopyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -30,13 +33,16 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     private UserService userService;
 
     @Override
-    public ResponseResult commentList(Long articleId, Integer pageNum, Integer pageSize) {
+    public ResponseResult commentList(String commentType, Long articleId, Integer pageNum, Integer pageSize) {
         // 查询对应文章根评论
         LambdaQueryWrapper<Comment> queryWrapper = new LambdaQueryWrapper<>();
         // 对articleId进行判断
-        queryWrapper.eq(Comment::getArticleId, articleId);
+        queryWrapper.eq(SystemConstants.ARTICLE_COMMENT.equals(commentType), Comment::getArticleId, articleId);
         // 根评论 rootId为-1
         queryWrapper.eq(Comment::getRootId, SystemConstants.ROOT_STATUS_NORMAL);
+        // 评论类型为文章评论
+        queryWrapper.eq(Comment::getType, commentType);
+
         // 分页查询
         Page<Comment> page = new Page<>(pageNum, pageSize);
         page(page, queryWrapper);
@@ -51,6 +57,18 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         }
 
         return ResponseResult.okResult(new PageVo(commentVos, page.getTotal()));
+    }
+
+    @Override
+    public ResponseResult addComment(Comment comment) {
+        // 评论内容不能为空
+        if(!StringUtils.hasText(comment.getContent())) {
+            throw new SystemException(AppHttpCodeEnum.CONTENT_NOT_NULL);
+        }
+
+        // 缺少的字段MybatisPlus我们设置自动填充
+        save(comment);
+        return ResponseResult.okResult();
     }
 
     /**

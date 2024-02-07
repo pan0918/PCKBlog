@@ -1,6 +1,7 @@
 package com.pck.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.pck.domain.ResponseResult;
 import com.pck.domain.entity.User;
 
 
@@ -12,4 +13,5 @@ import com.pck.domain.entity.User;
  */
 public interface UserService extends IService<User> {
 
+    ResponseResult userInfo();
 }
