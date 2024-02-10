@@ -1,5 +1,6 @@
 package com.pck.controller;
 
+import com.pck.annotation.SystemLog;
 import com.pck.domain.ResponseResult;
 import com.pck.domain.entity.User;
 import com.pck.enums.AppHttpCodeEnum;
@@ -20,6 +21,7 @@ public class BlogLoginController {
 
     // 登录功能实现
     @PostMapping("login")
+    @SystemLog(businessName = "用户登陆")
     public ResponseResult login(@RequestBody User user) {
         if(!StringUtils.hasText(user.getUserName())) {
             // 用户名不存在, 抛出我们自定义的异常处理方式
@@ -30,6 +32,7 @@ public class BlogLoginController {
 
     // 退出登陆功能实现
     @PostMapping("/logout")
+    @SystemLog(businessName = "退出登陆")
     public ResponseResult logout() {
         return blogLoginService.logout();
     }

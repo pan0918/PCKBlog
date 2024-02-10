@@ -1,5 +1,6 @@
 package com.pck.controller;
 
+import com.pck.annotation.SystemLog;
 import com.pck.domain.ResponseResult;
 import com.pck.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ public class CategoryController {
 
     // 查询所有分类列表
     @GetMapping("/getCategoryList")
+    @SystemLog(businessName = "分类标签获取")
     public ResponseResult getCategoryList() {
         return categoryService.getCategoryList();
     }
