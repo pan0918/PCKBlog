@@ -15,6 +15,7 @@ import com.pck.mapper.ArticleMapper;
 import com.pck.service.ArticleService;
 import com.pck.service.CategoryService;
 import com.pck.utils.BeanCopyUtils;
+import com.pck.utils.RedisCache;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,10 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     
     @Autowired
     private CategoryService categoryService;
-    
+
+    @Autowired
+    private RedisCache redisCache;
+
     // 查询热门文章，封装响应
     @Override
     public ResponseResult hotArticleList() {
@@ -102,6 +106,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     public ResponseResult getArticleDetail(Long id) {
         // 根据id查询文章
         Article article = getById(id);
+        // 从redis中获取viewCount
+        Integer viewCount = redisCache.getCacheMapValue(SystemConstants.ARTICLE_VIEW_COUNT, id.toString());
+        article.setViewCount(viewCount.longValue());
         // 转换成vo
         ArticleDetailVo articleDetailVo = BeanCopyUtils.copyBean(article, ArticleDetailVo.class);
         // 根据分类id查询分类名
@@ -110,5 +117,12 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         articleDetailVo.setCategoryName(category.getName());
         // 封装响应返回
         return ResponseResult.okResult(articleDetailVo);
+    }
+
+    @Override
+    public ResponseResult updateViewCount(Long id) {
+        // 更新对应redis中对应文章的浏览量
+        redisCache.incrementCacheMapValue(SystemConstants.ARTICLE_VIEW_COUNT, id.toString(), 1);
+        return ResponseResult.okResult();
     }
 }

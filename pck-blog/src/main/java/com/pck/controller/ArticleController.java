@@ -5,10 +5,7 @@ import com.pck.domain.ResponseResult;
 import com.pck.domain.entity.Article;
 import com.pck.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -43,5 +40,11 @@ public class ArticleController {
     @SystemLog(businessName = "文章详细内容获取")
     public ResponseResult getArticleDetail(@PathVariable Long id) {
         return articleService.getArticleDetail(id);
+    }
+
+    // 更新文章浏览量
+    @PutMapping("/updateViewCount/{id}")
+    public ResponseResult updateViewCount(@PathVariable("id") Long id) {
+        return articleService.updateViewCount(id);
     }
 }
