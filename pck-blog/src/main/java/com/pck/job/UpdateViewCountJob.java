@@ -22,8 +22,8 @@ public class UpdateViewCountJob {
     @Autowired
     private ArticleService articleService;
 
-    // 每隔5秒将redis中的数据更新到MySQL中
-    @Scheduled(cron = "0/5 * * * * ?")
+    // 每隔55秒将redis中的数据更新到MySQL中
+    @Scheduled(cron = "0/55 * * * * ?")
     public void updateViewCount() {
         // 获取redis中的浏览量
         Map<String, Integer> viewCountMap = redisCache.getCacheMap(SystemConstants.ARTICLE_VIEW_COUNT);
