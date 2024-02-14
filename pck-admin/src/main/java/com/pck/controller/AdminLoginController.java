@@ -15,6 +15,7 @@ import com.pck.service.BlogLoginService;
 import com.pck.service.MenuService;
 import com.pck.service.RoleService;
 import com.pck.utils.BeanCopyUtils;
+import com.pck.utils.RedisCache;
 import com.pck.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
@@ -37,6 +38,9 @@ public class AdminLoginController {
     @Autowired
     private RoleService roleService;
 
+    @Autowired
+    private RedisCache redisCache;
+
     // 登录功能实现
     @PostMapping("/user/login")
     @SystemLog(businessName = "用户登陆")
@@ -46,6 +50,14 @@ public class AdminLoginController {
             throw new SystemException(AppHttpCodeEnum.REQUIRE_USERNAME);
         }
         return adminLoginService.login(user);
+    }
+
+    /**
+     * 退出登陆实现
+     */
+    @PostMapping("/user/logout")
+    public ResponseResult logout() {
+        return adminLoginService.logout();
     }
 
     @GetMapping("getInfo")

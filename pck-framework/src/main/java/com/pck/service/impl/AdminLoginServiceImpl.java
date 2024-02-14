@@ -9,6 +9,7 @@ import com.pck.service.AdminLoginService;
 import com.pck.utils.BeanCopyUtils;
 import com.pck.utils.JwtUtil;
 import com.pck.utils.RedisCache;
+import com.pck.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -49,6 +50,15 @@ public class AdminLoginServiceImpl implements AdminLoginService {
         Map<String, String> map = new HashMap<>();
         map.put("token", jwt);
         return ResponseResult.okResult(map);
+    }
+
+    @Override
+    public ResponseResult logout() {
+        // 获取当前登陆用户Id
+        Long userId = SecurityUtils.getUserId();
+        // 删除redis中对应的值
+        redisCache.deleteObject("AdminLogin"+userId);
+        return ResponseResult.okResult();
     }
 
 }

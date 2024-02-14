@@ -1,6 +1,8 @@
 package com.pck.controller;
 
 import com.pck.domain.ResponseResult;
+import com.pck.domain.dto.TagListDto;
+import com.pck.domain.vo.PageVo;
 import com.pck.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +17,7 @@ public class TagController {
     private TagService tagService;
 
     @GetMapping("/list")
-    public ResponseResult list() {
-        return ResponseResult.okResult(tagService.list());
+    public ResponseResult<PageVo> list(Integer pageNum, Integer pageSize, TagListDto tagListDto) {
+        return tagService.pageTagList(pageNum, pageSize, tagListDto);
     }
 }

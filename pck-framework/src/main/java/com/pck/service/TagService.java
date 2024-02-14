@@ -1,7 +1,10 @@
 package com.pck.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.pck.domain.ResponseResult;
+import com.pck.domain.dto.TagListDto;
 import com.pck.domain.entity.Tag;
+import com.pck.domain.vo.PageVo;
 
 
 /**
@@ -12,4 +15,5 @@ import com.pck.domain.entity.Tag;
  */
 public interface TagService extends IService<Tag> {
 
+    ResponseResult<PageVo> pageTagList(Integer pageNum, Integer pageSize, TagListDto tagListDto);
 }
