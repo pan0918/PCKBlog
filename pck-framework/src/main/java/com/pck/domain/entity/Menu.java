@@ -3,11 +3,15 @@ package com.pck.domain.entity;
 import java.util.Date;
 
 import java.io.Serializable;
+import java.util.List;
+
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.experimental.Accessors;
 
 /**
  * 菜单权限表(Menu)表实体类
@@ -20,6 +24,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName("sys_menu")
+@Accessors(chain = true) // 将Menu变成链式 set方法就会有返回值 //stream
 public class Menu {
     //菜单ID@TableId
     private Long id;
@@ -59,6 +64,10 @@ public class Menu {
     
     private String delFlag;
 
+
+    // 数据库里没有这一字段， 查询时不查
+    @TableField(exist = false)
+    private List<Menu> children;
 
 }
 

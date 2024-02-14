@@ -6,6 +6,7 @@ import com.pck.domain.entity.LoginUser;
 import com.pck.domain.entity.Menu;
 import com.pck.domain.entity.User;
 import com.pck.domain.vo.AdminUserInfoVo;
+import com.pck.domain.vo.RoutersVo;
 import com.pck.domain.vo.UserInfoVo;
 import com.pck.enums.AppHttpCodeEnum;
 import com.pck.exception.SystemException;
@@ -54,7 +55,7 @@ public class AdminLoginController {
         // 根据用户Id查询全权限信息
         List<String> perms = menuService.selectPermsByUserId(loginUser.getUser().getId());
         // 根据用户Id查询角色信息
-        List<String> roleKeyList = roleService.selectRoleKeyByUserId(loginUser.getUser().getId()); 
+        List<String> roleKeyList = roleService.selectRoleKeyByUserId(loginUser.getUser().getId());
         // 获取用户信息
         User user = loginUser.getUser();
         UserInfoVo userInfoVo = BeanCopyUtils.copyBean(user, UserInfoVo.class);
@@ -62,6 +63,15 @@ public class AdminLoginController {
         AdminUserInfoVo adminUserInfoVo = new AdminUserInfoVo(perms, roleKeyList, userInfoVo);
 
         return ResponseResult.okResult(adminUserInfoVo);
+    }
+
+    @GetMapping("getRouters")
+    public ResponseResult<RoutersVo> getRouters() {
+        Long userId = SecurityUtils.getUserId();
+        // 查询Menu 结果是tree形式
+        List<Menu> menus = menuService.selectRouterMenuTreeByUserId(userId);
+        // 封装数据返回
+        return ResponseResult.okResult(new RoutersVo(menus));
     }
 
 }
