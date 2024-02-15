@@ -11,6 +11,7 @@ import com.pck.domain.vo.TagVo;
 import com.pck.mapper.TagMapper;
 import com.pck.service.TagService;
 import com.pck.utils.BeanCopyUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -24,6 +25,9 @@ import java.util.List;
  */
 @Service("tagService")
 public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagService {
+
+    @Autowired
+    private TagMapper tagMapper;
 
     @Override
     public ResponseResult<PageVo> pageTagList(Integer pageNum, Integer pageSize, TagListDto tagListDto) {
@@ -42,4 +46,10 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
 
         return ResponseResult.okResult(pageVo);
     }
+
+    @Override
+    public void removeTagById(Long id) {
+        tagMapper.updateFlag(id);
+    }
+
 }

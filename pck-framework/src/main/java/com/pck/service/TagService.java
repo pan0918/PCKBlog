@@ -16,4 +16,7 @@ import com.pck.domain.vo.PageVo;
 public interface TagService extends IService<Tag> {
 
     ResponseResult<PageVo> pageTagList(Integer pageNum, Integer pageSize, TagListDto tagListDto);
+
+    void removeTagById(Long id);
+
 }

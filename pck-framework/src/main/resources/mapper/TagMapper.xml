@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pck.mapper.TagMapper">
+    <update id="updateFlag">
+        UPDATE
+            pck_tag tag
+        SET
+            tag.del_flag = 1
+        where
+            tag.id = #{id}
+    </update>
+</mapper>
