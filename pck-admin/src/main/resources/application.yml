@@ -25,3 +25,9 @@ mybatis-plus:
       logic-delete-value: 1
       logic-not-delete-value: 0
       id-type: auto
+
+# qiniu云oss配置信息
+oss:
+  accessKey: p0ssIJ8sy0LdZ426jOsMnAJTP9J4l1pEwUk9Y0ET
+  secretKey: _Qo7bb2GWCI67ic0zUyktYZgvhFce49JiaLvOh8i
+  bucket: pck-blog

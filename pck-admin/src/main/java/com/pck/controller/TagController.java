@@ -11,6 +11,8 @@ import com.pck.utils.BeanCopyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/content/tag")
 public class TagController {
@@ -85,5 +87,14 @@ public class TagController {
         return ResponseResult.okResult();
     }
 
+    /**
+     * 写博文获取所有标签
+     * @return
+     */
+    @GetMapping("/listAllTag")
+    public ResponseResult listAllTag() {
+        List<TagVo> list =  tagService.listAllTag();
+        return ResponseResult.okResult(list);
+    }
 
 }

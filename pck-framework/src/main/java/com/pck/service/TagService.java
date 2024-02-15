@@ -5,6 +5,9 @@ import com.pck.domain.ResponseResult;
 import com.pck.domain.dto.TagListDto;
 import com.pck.domain.entity.Tag;
 import com.pck.domain.vo.PageVo;
+import com.pck.domain.vo.TagVo;
+
+import java.util.List;
 
 
 /**
@@ -19,4 +22,5 @@ public interface TagService extends IService<Tag> {
 
     void removeTagById(Long id);
 
+    List<TagVo> listAllTag();
 }
