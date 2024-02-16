@@ -37,4 +37,7 @@ public class SystemConstants {
     // 文章分类为正常状态
     public static final String NORMAL = "0";
 
+    // 管理员type类型
+    public static final String ADMIN = "1";
+
 }

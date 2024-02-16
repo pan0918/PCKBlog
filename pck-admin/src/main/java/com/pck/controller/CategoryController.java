@@ -1,15 +1,23 @@
 package com.pck.controller;
 
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.fastjson.JSON;
 import com.pck.domain.ResponseResult;
 import com.pck.domain.dto.AddCategoryDto;
 import com.pck.domain.entity.Category;
 import com.pck.domain.vo.CategoryVo;
+import com.pck.domain.vo.ExcelCategoryVo;
 import com.pck.domain.vo.PageVo;
+import com.pck.enums.AppHttpCodeEnum;
 import com.pck.service.CategoryService;
 import com.pck.utils.BeanCopyUtils;
+import com.pck.utils.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 @RestController
@@ -82,11 +90,42 @@ public class CategoryController {
         return ResponseResult.okResult(category);
     }
 
+    /**
+     * 修改分类
+     * @param category
+     * @return
+     */
     @PutMapping
     public ResponseResult editCategory(@RequestBody Category category) {
         // 更新
         categoryService.updateById(category);
 
         return ResponseResult.okResult();
+    }
+
+    /**
+     * 调用easyExcel导出分类文件
+     * @param response
+     */
+    @PreAuthorize("@ps.hasPermission('content:category:export')")
+    @GetMapping("/export")
+    public void export(HttpServletResponse response) {
+
+        try {
+            // 设置下载文件的请求头
+            WebUtils.setDownLoadHeader("分类.xlsx", response);
+            // 获取需要导出的数据 并封装
+            List<Category> categories = categoryService.list();
+            List<ExcelCategoryVo> excelCategoryVos = BeanCopyUtils.copyBeanList(categories, ExcelCategoryVo.class);
+            // 将数据写入到excel中
+            EasyExcel.write(response.getOutputStream(), ExcelCategoryVo.class).autoCloseStream(Boolean.FALSE).sheet("文章分类")
+                    .doWrite(excelCategoryVos);
+        } catch (Exception e) {
+            e.printStackTrace();
+            // 出现异常也要响应JSON
+            ResponseResult result = ResponseResult.errorResult(AppHttpCodeEnum.SYSTEM_ERROR);
+            WebUtils.renderString(response, JSON.toJSONString(result));
+        }
+
     }
 }
