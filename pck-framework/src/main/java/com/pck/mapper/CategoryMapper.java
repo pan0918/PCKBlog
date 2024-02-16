@@ -10,4 +10,5 @@ import com.pck.domain.entity.Category;
  */
 
 public interface CategoryMapper extends BaseMapper<Category> {
+    void deleteCategoryById(Long id);
 }

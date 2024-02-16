@@ -1,12 +1,14 @@
 package com.pck.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.pck.constants.SystemConstants;
 import com.pck.domain.ResponseResult;
 import com.pck.domain.entity.Article;
 import com.pck.domain.entity.Category;
 import com.pck.domain.vo.CategoryVo;
+import com.pck.domain.vo.PageVo;
 import com.pck.mapper.CategoryMapper;
 import com.pck.service.ArticleService;
 import com.pck.service.CategoryService;
@@ -30,6 +32,10 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
 
     @Autowired
     private ArticleService articleService;
+
+    @Autowired
+    private CategoryMapper categoryMapper;
+
     @Override
     public ResponseResult getCategoryList() {
         // 查询状态为已发布的文章
@@ -64,5 +70,30 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         List<CategoryVo> categoryVos = BeanCopyUtils.copyBeanList(list, CategoryVo.class);
 
         return categoryVos;
+    }
+
+    @Override
+    public PageVo selectCategoryPage(Integer pageNum, Integer pageSize) {
+        LambdaQueryWrapper<Category> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Category::getStatus, SystemConstants.NORMAL);
+
+        Page<Category> page = new Page<>();
+        page.setCurrent(pageNum);
+        page.setSize(pageSize);
+        page(page, queryWrapper);
+
+        // 封装Vo
+        List<Category> categories = page.getRecords();
+
+        PageVo pageVo = new PageVo();
+        pageVo.setTotal(page.getTotal());
+        pageVo.setRows(categories);
+
+        return pageVo;
+    }
+
+    @Override
+    public void deleteCategoryById(Long id) {
+        categoryMapper.deleteCategoryById(id);
     }
 }
