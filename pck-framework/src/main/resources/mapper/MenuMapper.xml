@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.pck.mapper.MenuMapper">
+    <!--  逻辑删除菜单  -->
+    <update id="deleteMenu">
+        UPDATE
+            sys_menu menu
+        SET
+            menu.del_flag = 1
+        WHERE
+            menu.id = #{id}
+    </update>
     <!--查询普通用户的权限信息-->
     <select id="selectPermsByUserId" resultType="java.lang.String">
         SELECT

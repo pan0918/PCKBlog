@@ -4,10 +4,14 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.pck.constants.SystemConstants;
 import com.pck.domain.entity.Menu;
+import com.pck.domain.vo.MenuVo;
 import com.pck.mapper.MenuMapper;
 import com.pck.service.MenuService;
+import com.pck.utils.BeanCopyUtils;
 import com.pck.utils.SecurityUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,6 +24,9 @@ import java.util.stream.Collectors;
  */
 @Service("menuService")
 public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements MenuService {
+
+    @Autowired
+    private MenuMapper menuMapper;
 
     @Override
     public List<String> selectPermsByUserId(Long id) {
@@ -81,5 +88,39 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
                 .filter(m -> m.getParentId().equals(menu.getId()))
                 .collect(Collectors.toList());
         return childrenList;
+    }
+
+
+    @Override
+    public List<MenuVo> listAllMenus(String status, String menuName) {
+        LambdaQueryWrapper<Menu> queryWrapper = new LambdaQueryWrapper<>();
+
+        // 菜单模糊匹配
+        queryWrapper.like(StringUtils.hasText(menuName), Menu::getMenuName, menuName);
+        // 菜单状态正常
+        queryWrapper.eq(Menu::getStatus, SystemConstants.MENU_STATUS);
+        // 按父、子Id排序
+        queryWrapper.orderByAsc(Menu::getParentId);
+        queryWrapper.orderByAsc(Menu::getOrderNum);
+
+
+        List<Menu> menus = list(queryWrapper);
+        // 封装Vo
+        List<MenuVo> menuVos = BeanCopyUtils.copyBeanList(menus, MenuVo.class);
+
+        return menuVos;
+    }
+
+    @Override
+    public boolean hasChildrenMenu(Long id) {
+        LambdaQueryWrapper<Menu> queryWrapper = new LambdaQueryWrapper<>();
+
+        queryWrapper.eq(Menu::getParentId, id);
+        return count(queryWrapper) > 0;
+    }
+
+    @Override
+    public void deleteMenu(Long id) {
+        menuMapper.deleteMenu(id);
     }
 }

@@ -40,4 +40,7 @@ public class SystemConstants {
     // 管理员type类型
     public static final String ADMIN = "1";
 
+    // 菜单正常状态
+    public static final String MENU_STATUS = "0";
+
 }

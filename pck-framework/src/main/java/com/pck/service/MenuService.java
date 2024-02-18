@@ -2,6 +2,7 @@ package com.pck.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.pck.domain.entity.Menu;
+import com.pck.domain.vo.MenuVo;
 
 import java.util.List;
 
@@ -17,4 +18,10 @@ public interface MenuService extends IService<Menu> {
     List<String> selectPermsByUserId(Long id);
 
     List<Menu> selectRouterMenuTreeByUserId(Long userId);
+
+    List<MenuVo> listAllMenus(String status, String menuName);
+
+    boolean hasChildrenMenu(Long id);
+
+    void deleteMenu(Long id);
 }
