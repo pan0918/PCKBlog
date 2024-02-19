@@ -3,6 +3,7 @@ package com.pck.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.pck.domain.ResponseResult;
 import com.pck.domain.entity.Link;
+import com.pck.domain.vo.PageVo;
 
 
 /**
@@ -14,4 +15,8 @@ import com.pck.domain.entity.Link;
 public interface LinkService extends IService<Link> {
 
     ResponseResult getAllLink();
+
+    PageVo listAllLink(Integer pageNum, Integer pageSize, String name, String status);
+
+    void deleteLink(Long id);
 }

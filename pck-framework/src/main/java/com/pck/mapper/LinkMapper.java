@@ -12,4 +12,5 @@ import com.pck.domain.entity.Link;
  */
 public interface LinkMapper extends BaseMapper<Link> {
 
+    void deleteLink(Long id);
 }
