@@ -1,11 +1,15 @@
 package com.pck.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.pck.domain.ResponseResult;
 import com.pck.domain.dto.AddMenuDto;
 import com.pck.domain.entity.Menu;
+import com.pck.domain.vo.MenuTreeVo;
 import com.pck.domain.vo.MenuVo;
+import com.pck.domain.vo.RoleMenuTreeSelectVo;
 import com.pck.service.MenuService;
 import com.pck.utils.BeanCopyUtils;
+import com.pck.utils.MenuTreeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -86,4 +90,39 @@ public class MenuController {
         menuService.deleteMenu(id);
         return ResponseResult.okResult();
     }
+
+    /**
+     * 新增用户前先获取新增用户时所填写的菜单树
+     * @return
+     */
+    @GetMapping("/treeselect")
+    public ResponseResult treeSelect() {
+        List<MenuTreeVo> menuTreeVos = menuService.treeSelect();
+
+        return ResponseResult.okResult(menuTreeVos);
+    }
+
+    /**
+     * 修改角色前先获取角色内容:菜单树
+     * @param id
+     * @return
+     */
+    @GetMapping("/roleMenuTreeselect/{id}")
+    public ResponseResult getRoleMenuTree(@PathVariable Long id) {
+        // RoleMenu表中未存超级管理员的信息, 默认超级管理员不能修改
+
+        // 根据角色Id查询对应的菜单Id
+        List<Long> checkedKeys = menuService.selectMenuListById(id);
+
+        LambdaQueryWrapper<Menu> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Menu::getStatus, 0L);
+        queryWrapper.orderByAsc(Menu::getOrderNum);
+        List<Menu> menus = menuService.list(queryWrapper);
+        List<MenuTreeVo> menuTree = MenuTreeUtils.getMenuTree(menus);
+
+        RoleMenuTreeSelectVo roleMenuTreeSelectVo = new RoleMenuTreeSelectVo(checkedKeys, menuTree);
+
+        return ResponseResult.okResult(roleMenuTreeSelectVo);
+    }
+
 }

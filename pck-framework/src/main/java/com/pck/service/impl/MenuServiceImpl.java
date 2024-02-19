@@ -4,10 +4,14 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.pck.constants.SystemConstants;
 import com.pck.domain.entity.Menu;
+import com.pck.domain.entity.RoleMenu;
+import com.pck.domain.vo.MenuTreeVo;
 import com.pck.domain.vo.MenuVo;
 import com.pck.mapper.MenuMapper;
 import com.pck.service.MenuService;
+import com.pck.service.RoleMenuService;
 import com.pck.utils.BeanCopyUtils;
+import com.pck.utils.MenuTreeUtils;
 import com.pck.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +31,9 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 
     @Autowired
     private MenuMapper menuMapper;
+
+    @Autowired
+    private RoleMenuService roleMenuService;
 
     @Override
     public List<String> selectPermsByUserId(Long id) {
@@ -123,4 +130,32 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     public void deleteMenu(Long id) {
         menuMapper.deleteMenu(id);
     }
+
+    @Override
+    public List<MenuTreeVo> treeSelect() {
+        LambdaQueryWrapper<Menu> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.orderByAsc(Menu::getOrderNum);
+
+        List<Menu> menus = list(queryWrapper);
+        // 获取菜单树
+        List<MenuTreeVo> menuTree = MenuTreeUtils.getMenuTree(menus);
+
+        return menuTree;
+    }
+
+    @Override
+    public List<Long> selectMenuListById(Long id) {
+
+        LambdaQueryWrapper<RoleMenu> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(RoleMenu::getRoleId, id);
+
+        List<RoleMenu> roleMenus = roleMenuService.list(queryWrapper);
+
+        List<Long> checkedKeys = roleMenus.stream()
+                .map(rm -> rm.getMenuId())
+                .collect(Collectors.toList());
+
+        return checkedKeys;
+    }
+
 }

@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.pck.mapper.RoleMapper">
+    <!--逻辑删除用户-->
+    <update id="deleteRole">
+        UPDATE
+            sys_role role
+        SET
+            role.del_flag = 1
+        WHERE
+            role.id = #{id}
+    </update>
     <select id="selectRoleKeyByUserId" resultType="java.lang.String">
         SELECT
             r.`role_key`

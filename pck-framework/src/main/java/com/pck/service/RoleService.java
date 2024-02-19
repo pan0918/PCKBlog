@@ -1,7 +1,9 @@
 package com.pck.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.pck.domain.dto.ChangeRoleStatusDto;
 import com.pck.domain.entity.Role;
+import com.pck.domain.vo.PageVo;
 
 import java.util.List;
 
@@ -15,4 +17,14 @@ import java.util.List;
 public interface RoleService extends IService<Role> {
 
     List<String> selectRoleKeyByUserId(Long id);
+
+    PageVo listAllRole(Integer pageNum, Integer pageSize, String roleName, String status);
+
+    void changeStatus(ChangeRoleStatusDto changeRoleStatusDto);
+
+    void addRole(Role role);
+
+    void updateRole(Role role);
+
+    void deleteRole(Long id);
 }
