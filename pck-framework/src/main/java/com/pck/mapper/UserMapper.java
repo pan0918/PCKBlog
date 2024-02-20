@@ -12,4 +12,5 @@ import com.pck.domain.entity.User;
  */
 public interface UserMapper extends BaseMapper<User> {
 
+    void deleteUser(Long id);
 }

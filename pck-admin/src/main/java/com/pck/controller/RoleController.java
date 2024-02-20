@@ -1,5 +1,7 @@
 package com.pck.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.pck.constants.SystemConstants;
 import com.pck.domain.ResponseResult;
 import com.pck.domain.dto.ChangeRoleStatusDto;
 import com.pck.domain.entity.Role;
@@ -7,6 +9,8 @@ import com.pck.domain.vo.PageVo;
 import com.pck.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/system/role")
@@ -88,5 +92,19 @@ public class RoleController {
         // 逻辑删除用户
         roleService.deleteRole(id);
         return ResponseResult.okResult();
+    }
+
+    /**
+     * 新增用户时获取所有状态正常的角色
+     * @return
+     */
+    @GetMapping("/listAllRole")
+    public ResponseResult listAllRole() {
+        LambdaQueryWrapper<Role> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Role::getStatus, SystemConstants.ROLE_STATUS);
+
+        List<Role> roleList = roleService.list(queryWrapper);
+
+        return ResponseResult.okResult(roleList);
     }
 }

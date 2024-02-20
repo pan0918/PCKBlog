@@ -43,4 +43,7 @@ public class SystemConstants {
     // 菜单正常状态
     public static final String MENU_STATUS = "0";
 
+    // 角色正常状态
+    public static final String ROLE_STATUS = "0";
+
 }
